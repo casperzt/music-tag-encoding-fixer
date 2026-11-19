@@ -22,8 +22,12 @@ A small toolkit that repairs mojibake in music tags and `.cue` sheets and rewrit
   - `.cue` / `.m3u`：GBK 转 UTF-8
 - **第二遍 `scan_legacy.py` + `apply_legacy.py`**：处理 Big5 / Shift-JIS / GBK 全角等老编码
 - **第三遍 `scan_accent.py` + `apply_legacy.py`**：处理 `é è í ó` 等被双重编码的重音字母
+- **`scan_ads.py` + `clean_ads.py`**：清理标签里的广告/网址/站点水印
+  - 纯广告字段整条删除（COMM、TCOP、TENC、TPUB、TXXX…）
+  - 混合字段只去掉广告，保留歌名/歌手/专辑
+  - 歌词里只删 `[by:www.xxx.com]` 这样的广告行，保留歌词正文
 
-所有扫描默认只输出报告，只有 `--apply` 或显式执行 `apply_legacy.py` 才会写文件。
+所有扫描默认只输出报告，只有 `--apply` 或显式执行 `apply_legacy.py` / `clean_ads.py --apply` 才会写文件。
 
 ## 依赖
 
@@ -63,7 +67,26 @@ python3 scan_accent.py /path/to/Music accent.json
 python3 apply_legacy.py accent.json
 ```
 
-最后重新跑一遍三组扫描，应该都输出 `0` 个候选。
+### 4. 广告/网址清理
+
+```bash
+# 先看报告
+python3 scan_ads.py /path/to/Music ads.json
+python3 clean_ads.py /path/to/Music --log ads_dry.jsonl
+
+# 确认后写入
+python3 clean_ads.py /path/to/Music --apply --log ads_applied.jsonl
+```
+
+清理效果示例：
+
+```
+http://www.btgod.com  品茶制作      ->  <删除>
+周杰伦  至爱音乐论坛[www.needpop.com]  ->  周杰伦
+[mp3wma.net] DaZa [mp3wma.net]       ->  DaZa
+```
+
+最后重新跑一遍所有扫描，应该都输出 `0` 个候选。
 
 ## 输出
 
