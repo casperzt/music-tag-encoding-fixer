@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.jsonl
+*.log
+applied.json*
+legacy*.json
+accent*.json
+待人工处理.tsv
+变更日志.tsv
+.DS_Store
