@@ -9,3 +9,6 @@ CUE索引	encoding	gb18030	utf-8
 ID3标签	comment	http://www.example.com  某站制作	<删除>
 ID3标签	artist	周杰伦  某论坛[www.example.com]	周杰伦
 ID3标签	album	Twins Party 某站音乐|www.example.org	Twins Party
+APEv2	Artist	陈慧娴（GBK 字节）	陈慧娴（UTF-8）
+APEv2	Album	昨日.今日.永远（GBK 字节）	昨日.今日.永远（UTF-8）
+APEv2	Album	珍藏趙詠華精選集(一)（Big5 字节）	珍藏趙詠華精選集(一)（UTF-8）

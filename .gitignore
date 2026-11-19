@@ -10,3 +10,5 @@ accent*.json
 .DS_Store
 ads*.json
 ads*.jsonl
+ape_raw*.json
+ape_raw*.jsonl

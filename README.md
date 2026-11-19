@@ -26,8 +26,12 @@ A small toolkit that repairs mojibake in music tags and `.cue` sheets and rewrit
   - 纯广告字段整条删除（COMM、TCOP、TENC、TPUB、TXXX…）
   - 混合字段只去掉广告，保留歌名/歌手/专辑
   - 歌词里只删 `[by:www.xxx.com]` 这样的广告行，保留歌词正文
+- **`ape_raw_scan.py` + `fix_ape_raw.py`**：修复 APEv2 里直接存 GBK/Big5 原始字节的标签
+  - APEv2 规范要求 UTF-8；老工具写入 GBK 字节后，Mp3tag / foobar 会显示乱码
+  - 按字节重新解码（GBK / Big5 / Shift-JIS 按字频评分选择），再整块重写为 UTF-8
+  - 同时删除 `绝对音乐`、`論壇網址` 等广告键
 
-所有扫描默认只输出报告，只有 `--apply` 或显式执行 `apply_legacy.py` / `clean_ads.py --apply` 才会写文件。
+所有扫描默认只输出报告，只有 `--apply` 或显式执行 `apply_legacy.py` / `clean_ads.py --apply` / `fix_ape_raw.py --apply` 才会写文件。
 
 ## 依赖
 
@@ -67,7 +71,26 @@ python3 scan_accent.py /path/to/Music accent.json
 python3 apply_legacy.py accent.json
 ```
 
-### 4. 广告/网址清理
+### 4. APEv2 原始 GBK/Big5 字节
+
+有些 `.ape` / `.mp3` 的 APEv2 值不是合法 UTF-8（常见于老 EAC + Monkey's Audio 抓轨），
+标准读取会失败或显示乱码：
+
+```bash
+# 只扫描，输出报告
+python3 ape_raw_scan.py /path/to/Music ape_raw.json
+
+# 预演
+python3 fix_ape_raw.py /path/to/Music
+
+# 写入
+python3 fix_ape_raw.py /path/to/Music --apply --log ape_raw_applied.jsonl
+```
+
+脚本会用整个曲库的文件名建立中文字频表，在 GBK / Big5 / Shift-JIS 之间选最可信的解码，
+避免把 Big5 的繁体标签误判成 GBK。
+
+### 5. 广告/网址清理
 
 ```bash
 # 先看报告
